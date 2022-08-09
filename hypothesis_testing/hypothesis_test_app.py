@@ -79,8 +79,9 @@ result = 'insignificant'
 st.markdown( '# Result is <font color="#D62728">'+result+'</font>', unsafe_allow_html=True )
 st.markdown( '###' )
 
+st.markdown('---')
 #------------------------------------------------------------------------------------
-# Row of plots
+# Open rate plots
 #------------------------------------------------------------------------------------
 
 test_power = calc_power(OR/100,POWER/100,ALPHA/100)
@@ -128,7 +129,64 @@ fig2.update_layout(
 #~~~~~~~~~~
 # Plot figures
 #~~~~~~~~~~
+st.markdown( '## Open Rate' )
+left_column, right_column = st.columns(2)
 
+left_column.plotly_chart( fig1, use_container_width=True )
+right_column.plotly_chart( fig2, use_container_width=True )
+
+st.markdown('---')
+
+#------------------------------------------------------------------------------------
+# Click rate plots
+#------------------------------------------------------------------------------------
+
+test_power = calc_power(CR/100,POWER/100,ALPHA/100)
+test_signif = calc_signif(CR/100,ALPHA/100)
+#~~~~~~~~~~
+# Statistical power
+#~~~~~~~~~~
+
+fig1 = px.line(
+    x = test_power[0],
+    y = test_power[1],
+    orientation='h',
+    title='<b>Statistical Power</b>',
+    template='simple_white'
+)
+fig1.add_vline(x=nobs,line_width=3,line_color='#D62728')
+fig1.update_traces(showlegend=False)
+
+fig1.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    xaxis={'title_text': 'Number of Recipients'},
+    yaxis={'title_text': f'Lift above {OR}% (%)'},
+)
+
+#~~~~~~~~~~
+# Significance
+#~~~~~~~~~~
+
+fig2 = px.line(
+    x = test_signif[0],
+    y = test_signif[1],
+    orientation='h',
+    title='<b>Significance</b>',
+    template='simple_white'
+)
+fig2.add_vline(x=nobs,line_width=3,line_color='#D62728')
+fig2.update_traces(showlegend=False)
+
+fig2.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    xaxis={'title_text': 'Number of Recipients'},
+    yaxis={'title_text': f'Lift above {OR}% (%)'},
+)
+
+#~~~~~~~~~~
+# Plot figures
+#~~~~~~~~~~
+st.markdown( '## Open Rate' )
 left_column, right_column = st.columns(2)
 
 left_column.plotly_chart( fig1, use_container_width=True )
