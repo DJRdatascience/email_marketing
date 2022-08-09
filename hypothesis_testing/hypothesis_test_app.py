@@ -7,15 +7,15 @@ import plotly.express as px
 #####################################################################################
 # FUNCTIONS
 #####################################################################################
-l = np.arange(0.01,0.26,0.01)
-def calc_power(rate,power,alpha):
-    out = []
+nobs_list = range(10,810)
+def calc_power(rate,power,alpha,l=nobs_list):
+    lift = []
     analysis = TTestIndPower()
-    for lift in np.arange(0.01,0.26,0.01):
+    for n in l:
         effect = sms.proportion_effectsize(rate, rate+lift, method='normal')
-        result = analysis.solve_power(effect, power=power, nobs1=None, ratio=1.0, alpha=alpha)
-        out.append(result)
-    return out
+        result = analysis.solve_power(effect_size=effect, power=power, nobs1=n, ratio=1.0, alpha=alpha)
+        lift.append(result)
+    return lift
 
 #####################################################################################
 # SETUP PAGE
@@ -32,7 +32,7 @@ st.set_page_config( page_title='Hypothesis_Testing',
 
 st.sidebar.header('Email parameters')
 
-n = st.sidebar.number_input(
+nobs = st.sidebar.number_input(
     'Recipients',value=200,min_value=25,max_value=800,step=1
 )
 
@@ -71,7 +71,7 @@ fig1 = px.line(
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
 )
-fig1.add_vline(x=n,line_width=3)
+fig1.add_vline(x=nobs,line_width=3)
 fig1.update_traces(showlegend=False)
 
 fig1.update_layout(
@@ -91,7 +91,7 @@ fig1 = px.line(
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
 )
-fig1.add_vline(x=n,line_width=3)
+fig1.add_vline(x=nobs,line_width=3)
 fig1.update_traces(showlegend=False)
 
 fig1.update_layout(
@@ -111,7 +111,7 @@ fig1 = px.line(
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
 )
-fig1.add_vline(x=n,line_width=3)
+fig1.add_vline(x=nobs,line_width=3)
 fig1.update_traces(showlegend=False)
 
 fig1.update_layout(
