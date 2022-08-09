@@ -44,7 +44,7 @@ OR = st.sidebar.slider(
 )
 
 CR = st.sidebar.slider(
-    'Base click rate (%)', min_value=0.2, max_value=10, value=1, step=0.2
+    'Base click rate (%)', min_value=0.2, max_value=10.0, value=1.0, step=0.2
 )
 
 POWER = st.sidebar.slider(
