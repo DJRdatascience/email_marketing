@@ -74,8 +74,8 @@ test = calc_power(OR/100,POWER/100,ALPHA/100)
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = np.array(test[0])[:,0],
-    y = np.array(test[1])[:,0],
+    x = np.array(test)[:,0],
+    y = np.array(test)[:,1],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
@@ -94,8 +94,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = np.array(test[0])[:,0],
-    y = np.array(test[1])[:,0],
+    x = np.array(test)[:,0],
+    y = np.array(test)[:,1],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
@@ -114,8 +114,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = np.array(test[0])[:,0],
-    y = np.array(test[1])[:,0],
+    x = np.array(test)[:,0],
+    y = np.array(test)[:,1],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
