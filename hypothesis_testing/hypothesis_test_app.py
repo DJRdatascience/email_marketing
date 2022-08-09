@@ -98,7 +98,10 @@ fig1 = px.line(
     title='<b>Statistical Power</b>',
     template='simple_white'
 )
-fig1.add_vline(x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',annotation_position='top left',annotation_textangle=270)
+fig1.add_vline( x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',
+                annotation_position='top left',annotation_textangle=270,
+                annotation_font={'color':'#D62728'})
+
 fig1.update_traces(showlegend=False)
 
 fig1.update_layout(
@@ -118,7 +121,9 @@ fig2 = px.line(
     title='<b>Significance</b>',
     template='simple_white'
 )
-fig2.add_vline(x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',annotation_position='top left',annotation_textangle=270)
+fig2.add_vline( x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',
+                annotation_position='top left',annotation_textangle=270,
+                annotation_font={'color':'#D62728'})
 fig2.update_traces(showlegend=False)
 
 fig2.update_layout(
@@ -156,7 +161,9 @@ fig1 = px.line(
     title='<b>Statistical Power</b>',
     template='simple_white'
 )
-fig1.add_vline(x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',annotation_position='top left',annotation_textangle=270)
+fig1.add_vline( x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',
+                annotation_position='top left',annotation_textangle=270,
+                annotation_font={'color':'#D62728'})
 fig1.update_traces(showlegend=False)
 
 fig1.update_layout(
@@ -176,7 +183,9 @@ fig2 = px.line(
     title='<b>Significance</b>',
     template='simple_white'
 )
-fig2.add_vline(x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',annotation_position='top left',annotation_textangle=270,annotation_font={'color':'#D62728'})
+fig2.add_vline( x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',
+                annotation_position='top left',annotation_textangle=270,
+                annotation_font={'color':'#D62728'})
 fig2.update_traces(showlegend=False)
 
 fig2.update_layout(
