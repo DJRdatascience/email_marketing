@@ -44,7 +44,7 @@ OR = st.sidebar.slider(
 )
 
 CR = st.sidebar.slider(
-    'Base click rate (%)', min_value=0.2, max_value=10.0, value=1.0, step=0.2
+    'Base click rate (%)', min_value=0.1, max_value=6.0, value=2.0, step=0.1
 )
 
 POWER = st.sidebar.slider(
@@ -74,8 +74,8 @@ test = calc_power(OR/100,POWER/100,ALPHA/100)
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = np.array(test)[:,0],
-    y = np.array(test)[:,1],
+    x = np.array(test)[0,:],
+    y = np.array(test)[1,:],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
@@ -94,8 +94,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = np.array(test)[:,0],
-    y = np.array(test)[:,1],
+    x = np.array(test)[0,:],
+    y = np.array(test)[1,:],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
@@ -114,8 +114,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = np.array(test)[:,0],
-    y = np.array(test)[:,1],
+    x = np.array(test)[0,:],
+    y = np.array(test)[1,:],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
