@@ -8,10 +8,10 @@ import plotly.express as px
 # FUNCTIONS
 #####################################################################################
 l = np.arange(0.01,0.26,0.01)
-def calc_power(rate,power,alpha,lifts=l):
+def calc_power(rate,power,alpha):
     out = []
     analysis = TTestIndPower()
-    for lift in lifts:
+    for lift in np.arange(0.01,0.26,0.01):
         effect = sms.proportion_effectsize(rate, rate+lift, method='normal')
         result = analysis.solve_power(effect, power=power, nobs1=None, ratio=1.0, alpha=alpha)
         out.append(result)
