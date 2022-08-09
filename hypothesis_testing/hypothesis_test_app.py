@@ -7,8 +7,8 @@ import plotly.express as px
 #####################################################################################
 # FUNCTIONS
 #####################################################################################
-lifts = np.arange(0.01,0.26,0.01)
-def calc_power(rate=rate,power=power,lifts=lifts,alpha=alpha):
+l = np.arange(0.01,0.26,0.01)
+def calc_power(rate,power,alpha,lifts=l):
     out = []
     analysis = TTestIndPower()
     for lift in lifts:
@@ -36,15 +36,15 @@ n = st.sidebar.number_input(
     'Recipients',value=200,min_value=25,max_value=800,step=1
 )
 
-rate = st.sidebar.slider(
+RATE = st.sidebar.slider(
     'Base open rate (%)', min_value=20, max_value=40, value=30, step=1
 )
 
-power = st.sidebar.slider(
+POWER = st.sidebar.slider(
     'Power level (%)', min_value=60, max_value=98, value=80, step=2
 )
 
-alpha = st.sidebar.slider(
+ALPHA = st.sidebar.slider(
     'Significance level (%)', min_value=2, max_value=40, value=20, step=2
 )
 
@@ -65,8 +65,8 @@ st.markdown( '###' )
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = calc_power(),
-    y = lifts,
+    x = calc_power(RATE,POWER,ALPHA),
+    y = l,
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
@@ -85,8 +85,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = calc_power(),
-    y = lifts,
+    x = calc_power(RATE,POWER,ALPHA),
+    y = l,
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
@@ -105,8 +105,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = calc_power(),
-    y = lifts,
+    x = calc_power(RATE,POWER,ALPHA),
+    y = l,
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
