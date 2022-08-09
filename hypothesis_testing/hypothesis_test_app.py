@@ -11,8 +11,7 @@ import plotly.express as px
 #####################################################################################
 # FUNCTIONS
 #####################################################################################
-LIFT = np.arange(0.6,0.005,-0.005)
-def calc_power(rate,power,alpha,lift=LIFT):
+def calc_power(rate,power,alpha,lift):
     nobs = [ [], [] ]
     analysis = GofChisquarePower()
     for l in lift:
@@ -84,8 +83,10 @@ st.markdown('---')
 # Open rate plots
 #------------------------------------------------------------------------------------
 
-test_power = calc_power(OR/100,POWER/100,ALPHA/100)
+LIFT = np.arange(0.6,0,-0.005)
+test_power = calc_power(OR/100,POWER/100,ALPHA/100,LIFT)
 test_signif = calc_signif(OR/100,ALPHA/100)
+
 #~~~~~~~~~~
 # Statistical power
 #~~~~~~~~~~
@@ -141,7 +142,8 @@ st.markdown('---')
 # Click rate plots
 #------------------------------------------------------------------------------------
 
-test_power = calc_power(CR/100,POWER/100,ALPHA/100)
+LIFT = np.arange(0.2,0,-0.002)
+test_power = calc_power(CR/100,POWER/100,ALPHA/100,LIFT)
 test_signif = calc_signif(CR/100,ALPHA/100)
 #~~~~~~~~~~
 # Statistical power
@@ -160,7 +162,7 @@ fig1.update_traces(showlegend=False)
 fig1.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
     xaxis={'title_text': 'Number of Recipients'},
-    yaxis={'title_text': f'Lift above {OR}% (%)'},
+    yaxis={'title_text': f'Lift above {CR}% (%)'},
 )
 
 #~~~~~~~~~~
@@ -180,13 +182,13 @@ fig2.update_traces(showlegend=False)
 fig2.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
     xaxis={'title_text': 'Number of Recipients'},
-    yaxis={'title_text': f'Lift above {OR}% (%)'},
+    yaxis={'title_text': f'Lift above {CR}% (%)'},
 )
 
 #~~~~~~~~~~
 # Plot figures
 #~~~~~~~~~~
-st.markdown( '## Open Rate' )
+st.markdown( '## Click Rate' )
 left_column, right_column = st.columns(2)
 
 left_column.plotly_chart( fig1, use_container_width=True )
