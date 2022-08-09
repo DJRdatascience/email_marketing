@@ -142,7 +142,7 @@ st.markdown('---')
 # Click rate plots
 #------------------------------------------------------------------------------------
 
-LIFT = np.arange(0.2,0,-0.002)
+LIFT = 0.2/np.logspace(0,2,100)
 test_power = calc_power(CR/100,POWER/100,ALPHA/100,LIFT)
 test_signif = calc_signif(CR/100,ALPHA/100)
 #~~~~~~~~~~
