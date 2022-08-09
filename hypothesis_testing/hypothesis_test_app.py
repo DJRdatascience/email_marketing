@@ -25,7 +25,7 @@ def calc_power(rate,power,alpha,lift=LIFT):
             nobs[1].append(l*100)
     return nobs
 
-def calc_signif(rate,alpha,lift=np.flip(LIFT)):
+def calc_signif(rate,alpha,lift=np.flip(2**(-np.logspace(0.1,.8,150)))):#np.flip(LIFT)
     nobs = [ [], [] ]
     for obs in range(10,810,10):
         for l in lift:
@@ -106,7 +106,7 @@ fig1.update_layout(
 )
 
 #~~~~~~~~~~
-# Statistical power
+# Significance
 #~~~~~~~~~~
 
 fig2 = px.line(
@@ -116,10 +116,10 @@ fig2 = px.line(
     title='<b>Significance</b>',
     template='simple_white'
 )
-fig1.add_vline(x=nobs,line_width=3,line_color='#D62728')
-fig1.update_traces(showlegend=False)
+fig2.add_vline(x=nobs,line_width=3,line_color='#D62728')
+fig2.update_traces(showlegend=False)
 
-fig1.update_layout(
+fig2.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
     xaxis={'title_text': None},
     yaxis={'title_text': None},
