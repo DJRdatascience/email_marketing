@@ -7,7 +7,7 @@ import plotly.express as px
 #####################################################################################
 # FUNCTIONS
 #####################################################################################
-LIFT = np.arange(0.02,0.261,0.001)
+LIFT = np.arange(0.6,0.01,-0.005)
 def calc_power(rate,power,alpha,lift=LIFT):
     nobs = [ [], [] ]
     analysis = TTestIndPower()
@@ -67,15 +67,15 @@ st.markdown( '###' )
 # Row of plots
 #------------------------------------------------------------------------------------
 
-test = calc_power(OR/100,POWER/100,ALPHA/100)
+x,y = calc_power(OR/100,POWER/100,ALPHA/100)
 
 #~~~~~~~~~~
 # Statistical power
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = np.array(test)[0,:],
-    y = np.array(test)[1,:],
+    x = test[0],
+    y = test[1],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
@@ -94,8 +94,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = np.array(test)[0,:],
-    y = np.array(test)[1,:],
+    x = test[0],
+    y = test[1],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
@@ -114,8 +114,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = np.array(test)[0,:],
-    y = np.array(test)[1,:],
+    x = test[0],
+    y = test[1],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
