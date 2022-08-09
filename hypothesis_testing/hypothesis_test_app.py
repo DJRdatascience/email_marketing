@@ -7,15 +7,18 @@ import plotly.express as px
 #####################################################################################
 # FUNCTIONS
 #####################################################################################
-nobs_list = range(10,810)
-def calc_power(rate,power,alpha,l=nobs_list):
-    lift = []
+LIFT = np.arange(0.02,0.261,0.001)
+def calc_power(rate,power,alpha,lift=LIFT):
+    nobs = [ [], [] ]
     analysis = TTestIndPower()
-    for n in l:
-        effect = sms.proportion_effectsize(rate, rate+lift, method='normal')
-        result = analysis.solve_power(effect_size=effect, power=power, nobs1=n, ratio=1.0, alpha=alpha)
-        lift.append(result)
-    return lift
+    for l in lift:
+        effect = sms.proportion_effectsize(rate, rate+l, method='normal')
+        obs = analysis.solve_power(effect_size=effect, power=power, nobs1=None, ratio=1.0, alpha=alpha)
+        if obs > 800:
+            break
+        nobs[0].append(obs)
+        nobs[1].append(l)
+    return nobs
 
 #####################################################################################
 # SETUP PAGE
@@ -60,13 +63,15 @@ st.markdown( '###' )
 # Row of plots
 #------------------------------------------------------------------------------------
 
+test = calc_power(RATE/100,POWER/100,ALPHA/100)
+
 #~~~~~~~~~~
 # Statistical power
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = calc_power(RATE/100,POWER/100,ALPHA/100),
-    y = l,
+    x = test[0],
+    y = test[1],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
@@ -85,8 +90,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = calc_power(RATE/100,POWER/100,ALPHA/100),
-    y = l,
+    x = test[0],
+    y = test[1],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
@@ -105,8 +110,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = calc_power(RATE/100,POWER/100,ALPHA/100),
-    y = l,
+    x = test[0],
+    y = test[1],
     orientation='h',
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
