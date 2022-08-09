@@ -67,7 +67,7 @@ st.markdown( '###' )
 # Row of plots
 #------------------------------------------------------------------------------------
 
-x,y = calc_power(OR/100,POWER/100,ALPHA/100)
+test = calc_power(OR/100,POWER/100,ALPHA/100)
 
 #~~~~~~~~~~
 # Statistical power
