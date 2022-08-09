@@ -80,7 +80,7 @@ fig1 = px.line(
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
 )
-fig1.add_vline(x=nobs,line_width=3)
+fig1.add_vline(x=nobs,line_width=3,line_color='#D62728')
 fig1.update_traces(showlegend=False)
 
 fig1.update_layout(
@@ -100,27 +100,7 @@ fig1 = px.line(
     title='<b>Open Rates (percent)</b>',
     template='simple_white'
 )
-fig1.add_vline(x=nobs,line_width=3)
-fig1.update_traces(showlegend=False)
-
-fig1.update_layout(
-    plot_bgcolor='rgba(0,0,0,0)',
-    xaxis={'title_text': None},
-    yaxis={'title_text': None},
-)
-
-#~~~~~~~~~~
-# Statistical power
-#~~~~~~~~~~
-
-fig1 = px.line(
-    x = test[0],
-    y = test[1],
-    orientation='h',
-    title='<b>Open Rates (percent)</b>',
-    template='simple_white'
-)
-fig1.add_vline(x=nobs,line_width=3)
+fig1.add_vline(x=nobs,line_width=3,line_color='#D62728')
 fig1.update_traces(showlegend=False)
 
 fig1.update_layout(
@@ -133,8 +113,7 @@ fig1.update_layout(
 # Plot figures
 #~~~~~~~~~~
 
-left_column, middle_column, right_column = st.columns(3)
+left_column, right_column = st.columns(2)
 
 left_column.plotly_chart( fig1, use_container_width=True )
-middle_column.plotly_chart( fig1, use_container_width=True )
 right_column.plotly_chart( fig1, use_container_width=True )
