@@ -17,7 +17,7 @@ def calc_power(rate,power,alpha,lift=LIFT):
     analysis = GofChisquarePower()
     for l in lift:
         effect = chisquare_effectsize(rate, rate+l)
-        obs = analysis.solve_power(effect_size=effect, power=power, nobs=None, ratio=1.0, alpha=alpha)
+        obs = analysis.solve_power(effect_size=effect, power=power, nobs=None, alpha=alpha)
         if obs > 800:
             break
         nobs[0].append(obs)
