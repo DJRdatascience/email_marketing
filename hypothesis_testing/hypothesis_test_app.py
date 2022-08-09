@@ -176,7 +176,7 @@ fig2 = px.line(
     title='<b>Significance</b>',
     template='simple_white'
 )
-fig2.add_vline(x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',annotation_position='top left',annotation_textangle=270)
+fig2.add_vline(x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',annotation_textangle=270)
 fig2.update_traces(showlegend=False)
 
 fig2.update_layout(
