@@ -16,7 +16,7 @@ def calc_power(rate,power,alpha,lift=LIFT):
     nobs = [ [], [] ]
     analysis = GofChisquarePower()
     for l in lift:
-        effect = chisquare_effectsize(rate, rate+l)
+        effect = chisquare_effectsize(np.ones(2)/2, [rate, rate+l])
         if effect:
             obs = analysis.solve_power(effect_size=effect, power=power, nobs=None, alpha=alpha)
             if obs > 800:
