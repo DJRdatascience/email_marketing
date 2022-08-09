@@ -17,11 +17,12 @@ def calc_power(rate,power,alpha,lift=LIFT):
     analysis = GofChisquarePower()
     for l in lift:
         effect = chisquare_effectsize(rate, rate+l)
-        obs = analysis.solve_power(effect_size=effect, power=power, nobs=None, alpha=alpha)
-        if obs > 800:
-            break
-        nobs[0].append(obs)
-        nobs[1].append(l*100)
+        if effect:
+            obs = analysis.solve_power(effect_size=effect, power=power, nobs=None, alpha=alpha)
+            if obs > 800:
+                break
+            nobs[0].append(obs)
+            nobs[1].append(l*100)
     return nobs
 
 def calc_signif(rate,alpha,lift=np.flip(LIFT)):
