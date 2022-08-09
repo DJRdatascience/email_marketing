@@ -65,7 +65,7 @@ st.markdown( '###' )
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = calc_power(RATE,POWER,ALPHA),
+    x = calc_power(RATE/100,POWER/100,ALPHA/100),
     y = l,
     orientation='h',
     title='<b>Open Rates (percent)</b>',
@@ -85,7 +85,7 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = calc_power(RATE,POWER,ALPHA),
+    x = calc_power(RATE/100,POWER/100,ALPHA/100),
     y = l,
     orientation='h',
     title='<b>Open Rates (percent)</b>',
@@ -105,7 +105,7 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = calc_power(RATE,POWER,ALPHA),
+    x = calc_power(RATE/100,POWER/100,ALPHA/100),
     y = l,
     orientation='h',
     title='<b>Open Rates (percent)</b>',
