@@ -102,7 +102,7 @@ fig1.update_traces(showlegend=False)
 fig1.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
     xaxis={'title_text': 'Number of Recipients'},
-    yaxis={'title_text': 'Lift (%)'},
+    yaxis={'title_text': f'Lift above {OR}% (%)'},
 )
 
 #~~~~~~~~~~
@@ -122,7 +122,7 @@ fig2.update_traces(showlegend=False)
 fig2.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
     xaxis={'title_text': 'Number of Recipients'},
-    yaxis={'title_text': f'Lift above {CR}% (%)'},
+    yaxis={'title_text': f'Lift above {OR}% (%)'},
 )
 
 #~~~~~~~~~~
