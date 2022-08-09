@@ -1,23 +1,38 @@
 import streamlit as st
 import numpy as np
-from statsmodels.stats.power import TTestIndPower
-from statsmodels.stats.proportion import proportion_effectsize
+from statsmodels.stats.gof import chisquare_effectsize
+from statsmodels.stats.power import GofChisquarePower
+from statsmodels.stats.proportion import proportions_chisquare
+
+#from statsmodels.stats.power import TTestIndPower
+#from statsmodels.stats.proportion import proportion_effectsize
 import plotly.express as px
 
 #####################################################################################
 # FUNCTIONS
 #####################################################################################
-LIFT = np.arange(0.6,0.01,-0.005)
+LIFT = np.arange(0.6,0.005,-0.005)
 def calc_power(rate,power,alpha,lift=LIFT):
     nobs = [ [], [] ]
-    analysis = TTestIndPower()
+    analysis = GofChisquarePower()
     for l in lift:
-        effect = proportion_effectsize(rate, rate+l, method='normal')
+        effect = chisquare_effectsize(rate, rate+l)
         obs = analysis.solve_power(effect_size=effect, power=power, nobs1=None, ratio=1.0, alpha=alpha)
         if obs > 800:
             break
         nobs[0].append(obs)
-        nobs[1].append(l)
+        nobs[1].append(l*100)
+    return nobs
+
+def calc_signif(rate,alpha,lift=np.flip(LIFT)):
+    nobs = [ [], [] ]
+    for obs in range(10,810,10):
+        for l in lift:
+            stat, p, table = proportions_chisquare(count=[rate*obs,(rate+l)*obs],nobs=[obs,obs])
+            if p < alpha:
+                nobs[0].append(obs)
+                nobs[1].append(l*100)
+                break
     return nobs
 
 #####################################################################################
@@ -67,17 +82,17 @@ st.markdown( '###' )
 # Row of plots
 #------------------------------------------------------------------------------------
 
-test = calc_power(OR/100,POWER/100,ALPHA/100)
-
+test_power = calc_power(OR/100,POWER/100,ALPHA/100)
+test_signif = calc_signif(OR/100,ALPHA/100)
 #~~~~~~~~~~
 # Statistical power
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = test[0],
-    y = test[1],
+    x = test_power[0],
+    y = test_power[1],
     orientation='h',
-    title='<b>Open Rates (percent)</b>',
+    title='<b>Statistical Power</b>',
     template='simple_white'
 )
 fig1.add_vline(x=nobs,line_width=3,line_color='#D62728')
@@ -85,19 +100,19 @@ fig1.update_traces(showlegend=False)
 
 fig1.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
-    xaxis={'title_text': None},
-    yaxis={'title_text': None},
+    xaxis={'title_text': 'Number of Recipients'},
+    yaxis={'title_text': 'Lift (%)'},
 )
 
 #~~~~~~~~~~
 # Statistical power
 #~~~~~~~~~~
 
-fig1 = px.line(
-    x = test[0],
-    y = test[1],
+fig2 = px.line(
+    x = test_signif[0],
+    y = test_signif[1],
     orientation='h',
-    title='<b>Open Rates (percent)</b>',
+    title='<b>Significance</b>',
     template='simple_white'
 )
 fig1.add_vline(x=nobs,line_width=3,line_color='#D62728')
@@ -116,4 +131,4 @@ fig1.update_layout(
 left_column, right_column = st.columns(2)
 
 left_column.plotly_chart( fig1, use_container_width=True )
-right_column.plotly_chart( fig1, use_container_width=True )
+right_column.plotly_chart( fig2, use_container_width=True )
