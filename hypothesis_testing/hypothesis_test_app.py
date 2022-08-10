@@ -74,7 +74,7 @@ st.set_page_config( page_title='Hypothesis_Testing',
 
 st.sidebar.header('Email parameters')
 
-nobs = st.sidebar.number_input(
+OBS = st.sidebar.number_input(
     'Recipients',value=300,min_value=20,max_value=800,step=1
 )
 
@@ -104,23 +104,22 @@ st.sidebar.markdown(
 
 # Perform some calculations
 analysis = GofChisquarePower()
-effect = analysis.solve_power(effect_size=None, power=POWER/100, nobs=nobs, alpha=ALPHA/100)
+effect = analysis.solve_power(effect_size=None, power=POWER/100, nobs=OBS, alpha=ALPHA/100)
 or_lift_power = calc_lift_power(OR/100,effect)
 cr_lift_power = calc_lift_power(CR/100,effect)
+or_lift_sig = calc_lift_sig(OR,OBS,ALPHA)
+cr_lift_sig = calc_lift_sig(OR,CR,ALPHA)
 
 #####################################################################################
 # MAIN PAGE
 #####################################################################################
 
-
-
 st.markdown( '# Minimum lift' )
 st.markdown( 'To meet input power and significance, we would need to see the following lifts.' )
-st.markdown( f'## Open rate = <font color="#D62728">{round(or_lift_power*100,1)}%</font>', unsafe_allow_html=True )
-st.markdown( f'## Click rate = <font color="#D62728">{round(cr_lift_power*100,1)}%</font>', unsafe_allow_html=True )
-#st.markdown( '###' )
-
+st.markdown( f'## Open rate = <font color="#D62728">{round(max([or_lift_power,or_lift_sig])*100,1)}%</font>', unsafe_allow_html=True )
+st.markdown( f'## Click rate = <font color="#D62728">{round(max([cr_lift_power,cr_lift_sig])*100,1)}%</font>', unsafe_allow_html=True )
 st.markdown('---')
+
 #------------------------------------------------------------------------------------
 # Open rate plots
 #------------------------------------------------------------------------------------
@@ -140,7 +139,7 @@ fig1 = px.line(
     title='<b>Statistical Power</b>',
     template='simple_white'
 )
-fig1.add_vline( x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',
+fig1.add_vline( x=OBS,line_width=3,line_color='#D62728',annotation_text='Input',
                 annotation_position='top left',annotation_textangle=270,
                 annotation_font={'color':'#D62728'})
 
@@ -163,7 +162,7 @@ fig2 = px.line(
     title='<b>Significance</b>',
     template='simple_white'
 )
-fig2.add_vline( x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',
+fig2.add_vline( x=OBS,line_width=3,line_color='#D62728',annotation_text='Input',
                 annotation_position='top left',annotation_textangle=270,
                 annotation_font={'color':'#D62728'})
 fig2.update_traces(showlegend=False)
@@ -200,7 +199,7 @@ fig1 = px.line(
     title='<b>Statistical Power</b>',
     template='simple_white'
 )
-fig1.add_vline( x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',
+fig1.add_vline( x=OBS,line_width=3,line_color='#D62728',annotation_text='Input',
                 annotation_position='top left',annotation_textangle=270,
                 annotation_font={'color':'#D62728'})
 
@@ -223,7 +222,7 @@ fig2 = px.line(
     title='<b>Significance</b>',
     template='simple_white'
 )
-fig2.add_vline( x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',
+fig2.add_vline( x=OBS,line_width=3,line_color='#D62728',annotation_text='Input',
                 annotation_position='top left',annotation_textangle=270,
                 annotation_font={'color':'#D62728'})
 fig2.update_traces(showlegend=False)
