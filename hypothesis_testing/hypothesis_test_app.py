@@ -88,9 +88,10 @@ ALPHA = st.sidebar.slider(
 # MAIN PAGE
 #####################################################################################
 
-st.markdown( '# Minimum lift <br> text' )
-st.markdown( f'## Open rate = <font color="#D62728">{int(100.2)}</font>', unsafe_allow_html=True )
-st.markdown( f'## Click rate = <font color="#D62728">{int(100.2)}</font>', unsafe_allow_html=True )
+st.markdown( '# Minimum lift' )
+st.markdown( 'In order to meet input significance and power level, we would need to see the following lift above the input base rates.' )
+st.markdown( f'## Open rate = <font color="#D62728">{int(100.2)}%</font>', unsafe_allow_html=True )
+st.markdown( f'## Click rate = <font color="#D62728">{int(100.2)}%</font>', unsafe_allow_html=True )
 #st.markdown( '###' )
 
 st.markdown('---')
