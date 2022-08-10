@@ -118,8 +118,8 @@ cr_lift_power = calc_lift(CR/100,effect)
 
 st.markdown( '# Minimum lift' )
 st.markdown( 'To meet input power and significance, we would need to see the following lifts.' )
-st.markdown( f'## Open rate = <font color="#D62728">{int(or_lift_power*100)}%</font>', unsafe_allow_html=True )
-st.markdown( f'## Click rate = <font color="#D62728">{int(cr_lift_power*100)}%</font>', unsafe_allow_html=True )
+st.markdown( f'## Open rate = <font color="#D62728">{round(or_lift_power*100,1)}%</font>', unsafe_allow_html=True )
+st.markdown( f'## Click rate = <font color="#D62728">{round(cr_lift_power*100,1)}%</font>', unsafe_allow_html=True )
 #st.markdown( '###' )
 
 st.markdown('---')
