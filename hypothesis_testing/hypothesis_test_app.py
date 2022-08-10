@@ -126,7 +126,7 @@ st.markdown('---')
 
 LIFT = 1.5**(-np.logspace(0.1,1,100))
 test_power = calc_power(OR/100,POWER/100,ALPHA/100,LIFT)
-test_signif = calc_sig(OR/100,ALPHA/100)
+test_sig = calc_sig(OR/100,ALPHA/100)
 
 #~~~~~~~~~~
 # Statistical power
@@ -190,7 +190,7 @@ st.markdown('---')
 
 LIFT = 0.1/np.logspace(0,2,100)
 test_power = calc_power(CR/100,POWER/100,ALPHA/100,LIFT)
-test_signif = calc_sig(CR/100,ALPHA/100)
+test_sig = calc_sig(CR/100,ALPHA/100)
 
 fig1 = px.line(
     x = test_power[0],
