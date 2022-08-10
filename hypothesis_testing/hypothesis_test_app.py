@@ -80,13 +80,17 @@ POWER = st.sidebar.slider(
     'Statistical power (%)', min_value=60, max_value=98, value=80, step=2
 )
 st.sidebar.markdown(
-    '<font color="#1f77b4">Statistical power is the probability of correctly rejecting a null hypothesis. In other words, it tells us about our risk of Type II (false negative) error. For example, an experiment with a statistical power of 80\% has a 4 in 5 chance of correctly accepting the alternative hypothesis.</font>',
+    '<font color="#1f77b4">Power is the probability of correctly rejecting a null hypothesis. So, it tells us about our risk of Type II (false negative) error. We want to maximize this.</font>',
     unsafe_allow_html=True
-)
+) # For example, an experiment with a statistical power of 80\% has a 4 in 5 chance of correctly accepting the alternative hypothesis.
 
 ALPHA = st.sidebar.slider(
     'Significance level (%)', min_value=2, max_value=40, value=20, step=2
 )
+st.sidebar.markdown(
+    '<font color="#1f77b4">Significance is the probability of rejecting a null hypothesis if it is true. So, it tells us about our risk of Type I (false positive) error. We want to minimize this.</font>',
+    unsafe_allow_html=True
+) 
 
 #####################################################################################
 # MAIN PAGE
