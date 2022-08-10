@@ -77,7 +77,10 @@ CR = st.sidebar.slider(
 )
 
 POWER = st.sidebar.slider(
-    'Power level (%)', min_value=60, max_value=98, value=80, step=2
+    'Statistical power (%)', min_value=60, max_value=98, value=80, step=2
+)
+st.sidebar.markdown(
+    'Statistical power is the probability of correctly rejecting a null hypothesis. In other words, it tells us about our risk of Type II (false negative) error. For example, an experiment with a statistical power of 80\% has a 4 in 5 chance of correctly accepting the alternative hypothesis.'
 )
 
 ALPHA = st.sidebar.slider(
@@ -89,7 +92,7 @@ ALPHA = st.sidebar.slider(
 #####################################################################################
 
 st.markdown( '# Minimum lift' )
-st.markdown( 'In order to meet input significance and power level, we would need to see the following lift above the input base rates.' )
+st.markdown( 'To meet input power and significance, we would need to see the following lifts.' )
 st.markdown( f'## Open rate = <font color="#D62728">{int(100.2)}%</font>', unsafe_allow_html=True )
 st.markdown( f'## Click rate = <font color="#D62728">{int(100.2)}%</font>', unsafe_allow_html=True )
 #st.markdown( '###' )
