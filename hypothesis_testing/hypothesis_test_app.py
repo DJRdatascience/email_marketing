@@ -126,7 +126,8 @@ st.markdown('---')
 
 LIFT = 1.5**(-np.logspace(0.1,1,100))
 test_power = calc_power(OR/100,POWER/100,ALPHA/100,LIFT)
-test_signif = calc_sig(OR/100,ALPHA/100)
+test_sig = test_power
+#test_signif = calc_sig(OR/100,ALPHA/100)
 
 #~~~~~~~~~~
 # Statistical power
@@ -156,8 +157,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig2 = px.line(
-    x = test_signif[0],
-    y = test_signif[1],
+    x = test_sig[0],
+    y = test_sig[1],
     orientation='h',
     title='<b>Significance</b>',
     template='simple_white'
@@ -190,7 +191,8 @@ st.markdown('---')
 
 LIFT = 0.1/np.logspace(0,2,100)
 test_power = calc_power(CR/100,POWER/100,ALPHA/100,LIFT)
-test_signif = calc_sig(CR/100,ALPHA/100)
+test_sig = test_power
+#test_signif = calc_sig(CR/100,ALPHA/100)
 
 fig1 = px.line(
     x = test_power[0],
@@ -216,8 +218,8 @@ fig1.update_layout(
 #~~~~~~~~~~
 
 fig2 = px.line(
-    x = test_signif[0],
-    y = test_signif[1],
+    x = test_sig[0],
+    y = test_sig[1],
     orientation='h',
     title='<b>Significance</b>',
     template='simple_white'
