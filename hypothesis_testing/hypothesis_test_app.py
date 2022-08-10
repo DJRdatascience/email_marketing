@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+import pandas as pd
 from statsmodels.stats.gof import chisquare_effectsize
 from statsmodels.stats.power import GofChisquarePower
 from statsmodels.stats.proportion import proportions_chisquare
@@ -9,16 +10,16 @@ import plotly.express as px
 # FUNCTIONS
 #####################################################################################
 def calc_power(rate,power,alpha,lift):
-    nobs = [ [], [] ]
+    nobs = []
     analysis = GofChisquarePower()
-    for l in lift:
-        effect = chisquare_effectsize(np.ones(2)/2, [rate, rate+l])
-        if effect:
-            obs = analysis.solve_power(effect_size=effect, power=power, nobs=None, alpha=alpha)
-            if obs > 800:
-                break
-            nobs[0].append(obs)
-            nobs[1].append(l*100)
+    for i,label in enumerate(['ab','abc','abcd']):
+        for l in lift:
+            effect = chisquare_effectsize( np.ones(2+i)/(2+i), [rate+l]+[rate]*(1+i) )
+            if effect:
+                obs = analysis.solve_power(effect_size=effect, power=power, nobs=None, alpha=alpha)
+                if obs > 800:
+                    break
+                nobs.append([obs,l*100,label])
     return nobs
 
 def calc_sig(rate,alpha):
@@ -99,6 +100,7 @@ st.markdown('---')
 
 LIFT = 1.5**(-np.logspace(0.1,1,100))
 test_power = calc_power(OR/100,POWER/100,ALPHA/100,LIFT)
+test_power = pd.DateFrame(test_power,columns=['Samples','Lift','Experiment'])
 test_signif = calc_sig(OR/100,ALPHA/100)
 
 #~~~~~~~~~~
@@ -106,8 +108,10 @@ test_signif = calc_sig(OR/100,ALPHA/100)
 #~~~~~~~~~~
 
 fig1 = px.line(
-    x = test_power[0],
-    y = test_power[1],
+    test_power,
+    x = 'Samples',
+    y = 'Lift',
+    line_group = 'Experiment',
     orientation='h',
     title='<b>Statistical Power</b>',
     template='simple_white'
@@ -116,7 +120,7 @@ fig1.add_vline( x=nobs,line_width=3,line_color='#D62728',annotation_text='Input'
                 annotation_position='top left',annotation_textangle=270,
                 annotation_font={'color':'#D62728'})
 
-fig1.update_traces(showlegend=False)
+fig1.update_traces(showlegend=True)
 
 fig1.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
@@ -163,15 +167,14 @@ st.markdown('---')
 
 LIFT = 0.1/np.logspace(0,2,100)
 test_power = calc_power(CR/100,POWER/100,ALPHA/100,LIFT)
+test_power = pd.DateFrame(test_power,columns=['Samples','Lift','Experiment'])
 test_signif = calc_sig(CR/100,ALPHA/100)
 
-#~~~~~~~~~~
-# Statistical power
-#~~~~~~~~~~
-
 fig1 = px.line(
-    x = test_power[0],
-    y = test_power[1],
+    test_power,
+    x = 'Samples',
+    y = 'Lift',
+    line_group = 'Experiment',
     orientation='h',
     title='<b>Statistical Power</b>',
     template='simple_white'
@@ -179,7 +182,8 @@ fig1 = px.line(
 fig1.add_vline( x=nobs,line_width=3,line_color='#D62728',annotation_text='Input',
                 annotation_position='top left',annotation_textangle=270,
                 annotation_font={'color':'#D62728'})
-fig1.update_traces(showlegend=False)
+
+fig1.update_traces(showlegend=True)
 
 fig1.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
