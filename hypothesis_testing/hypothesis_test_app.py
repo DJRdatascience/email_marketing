@@ -88,8 +88,9 @@ ALPHA = st.sidebar.slider(
 # MAIN PAGE
 #####################################################################################
 
-result = 'insignificant'
-st.markdown( '# Result is <font color="#D62728">'+result+'</font>', unsafe_allow_html=True )
+st.markdown( '# Minimum recipients' )
+st.markdown( f'## Open rate = <font color="#D62728">{int(100.2)}</font>', unsafe_allow_html=True )
+st.markdown( f'## Click rate = <font color="#D62728">{int(100.2)}</font>', unsafe_allow_html=True )
 st.markdown( '###' )
 
 st.markdown('---')
