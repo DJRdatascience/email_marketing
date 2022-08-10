@@ -8,6 +8,36 @@ import plotly.express as px
 #####################################################################################
 # FUNCTIONS
 #####################################################################################
+def calc_lift_power(rate,known_effect):
+    lift = 0
+    calc_effect = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift])
+    if calc_effect < known_effect:
+        lift_inc = 0.2
+        last_sign = 1
+        while abs(known_effect-calc_effect) > 0.001:
+            sign = np.sign(known_effect-calc_effect)
+            if last_sign+sign == 0:
+                lift_inc /= 2
+            lift += sign*lift_inc
+            last_sign = sign
+            calc_effect = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift])
+    return lift
+
+def calc_lift_sig(rate,obs,alpha):
+    lift = 0
+    stat, p, table = proportions_chisquare(count=[rate*obs,(rate+lift)*obs],nobs=[obs,obs])
+    lift_inc = 0.2
+    last_sign = 1
+    while abs(p - alpha) > 0.001:
+        sign = np.sign(p-alpha)
+        if last_sign+sign == 0:
+            lift_inc /= 2
+        lift += sign*lift_inc
+        last_sign = sign
+        stat, p, table = proportions_chisquare(count=[rate*obs,(rate+lift)*obs],nobs=[obs,obs])
+    return lift
+
+
 def calc_power(rate,power,alpha,lift):
     nobs = [ [], [] ]
     analysis = GofChisquarePower()
@@ -24,42 +54,10 @@ def calc_power(rate,power,alpha,lift):
 def calc_sig(rate,alpha):
     nobs = [ [], [] ]
     for obs in range(10,810,10):
-        
-        lift = 1-rate
-        stat, p, table = proportions_chisquare(count=[rate*obs,(rate+lift)*obs],nobs=[obs,obs])
-        
-        if p < alpha:
-            lift_inc = 0.2
-            last_sign = -1
-            while abs(p - alpha) > 0.001:
-                sign = np.sign(p-alpha)
-                if last_sign+sign == 0:
-                    lift_inc /= 2
-                lift += sign*lift_inc
-                if lift < 0:
-                    lift = 0.0001
-                last_sign = sign
-
-                stat, p, table = proportions_chisquare(count=[rate*obs,(rate+lift)*obs],nobs=[obs,obs])
-
-            nobs[0].append(obs)
-            nobs[1].append(lift*100)
+        lift = calc_lift_sig(rate,obs,alpha)
+        nobs[0].append(obs)
+        nobs[1].append(lift*100)
     return nobs
-
-def calc_lift(rate,known_effect):
-    lift = 0
-    calc_effect = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift])
-    if calc_effect < known_effect:
-        lift_inc = 0.2
-        last_sign = 1
-        while abs(known_effect-calc_effect) > 0.001:
-            sign = np.sign(known_effect-calc_effect)
-            if last_sign+sign == 0:
-                lift_inc /= 2
-            lift += sign*lift_inc
-            last_sign = sign
-            calc_effect = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift])
-    return lift
 
 #####################################################################################
 # SETUP PAGE
@@ -77,7 +75,7 @@ st.set_page_config( page_title='Hypothesis_Testing',
 st.sidebar.header('Email parameters')
 
 nobs = st.sidebar.number_input(
-    'Recipients',value=200,min_value=25,max_value=800,step=1
+    'Recipients',value=300,min_value=20,max_value=800,step=1
 )
 
 OR = st.sidebar.slider(
@@ -107,8 +105,8 @@ st.sidebar.markdown(
 # Perform some calculations
 analysis = GofChisquarePower()
 effect = analysis.solve_power(effect_size=None, power=POWER/100, nobs=nobs, alpha=ALPHA/100)
-or_lift_power = calc_lift(OR/100,effect)
-cr_lift_power = calc_lift(CR/100,effect)
+or_lift_power = calc_lift_power(OR/100,effect)
+cr_lift_power = calc_lift_power(CR/100,effect)
 
 #####################################################################################
 # MAIN PAGE
