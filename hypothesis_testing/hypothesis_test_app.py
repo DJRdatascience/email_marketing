@@ -42,7 +42,7 @@ def calc_lift_sig(rate,obs,alpha):
 def calc_power(rate,power,alpha):
     nobs = [ [], [] ]
     for obs in range(20,820,20):
-        lift = calc_lift_power(rate,power,alpha)
+        lift = calc_lift_power(rate,power,obs,alpha)
         nobs[0].append(obs)
         nobs[1].append(lift*100)
     return nobs
