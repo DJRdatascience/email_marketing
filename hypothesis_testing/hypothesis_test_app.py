@@ -31,7 +31,6 @@ def calc_sig(rate,alpha):
         if p < alpha:
             lift_inc = 0.2
             last_sign = -1
-            len = 0
             while abs(p - alpha) > 0.001:
                 sign = np.sign(p-alpha)
                 if last_sign+sign == 0:
@@ -42,12 +41,25 @@ def calc_sig(rate,alpha):
                 last_sign = sign
 
                 stat, p, table = proportions_chisquare(count=[rate*obs,(rate+lift)*obs],nobs=[obs,obs])
-                len += 1
-                if len == 20:
-                    break
+
             nobs[0].append(obs)
             nobs[1].append(lift*100)
     return nobs
+
+def calc_lift(rate,known_effect):
+    lift = 0
+    calc_effect = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift])
+    if calc_effect < known_effect:
+        lift_inc = 0.2
+        last_sign = 1
+        while abs(known_effect-calc_effect) > 0.001:
+            sign = np.sign(known_effect-calc_effect)
+            if last_sign+sign == 0:
+                lift_inc /= 2
+            lift += sign*lift_inc
+            last_sign = sign
+            calc_effect = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift])
+    return lift
 
 #####################################################################################
 # SETUP PAGE
@@ -90,16 +102,24 @@ ALPHA = st.sidebar.slider(
 st.sidebar.markdown(
     '<font color="#1f77b4">Significance tells us about our risk of Type I (false positive) error. We want to minimize this.</font>',
     unsafe_allow_html=True
-) 
+)
+
+# Perform some calculations
+analysis = GofChisquarePower()
+effect = analysis.solve_power(effect_size=None, power=POWER/100, nobs=nobs, alpha=ALPHA/100)
+or_lift_power = calc_lift(OR/100,effect)
+cr_lift_power = calc_lift(CR/100,effect)
 
 #####################################################################################
 # MAIN PAGE
 #####################################################################################
 
+
+
 st.markdown( '# Minimum lift' )
 st.markdown( 'To meet input power and significance, we would need to see the following lifts.' )
-st.markdown( f'## Open rate = <font color="#D62728">{int(100.2)}%</font>', unsafe_allow_html=True )
-st.markdown( f'## Click rate = <font color="#D62728">{int(100.2)}%</font>', unsafe_allow_html=True )
+st.markdown( f'## Open rate = <font color="#D62728">{int(or_lift_power*100)}%</font>', unsafe_allow_html=True )
+st.markdown( f'## Click rate = <font color="#D62728">{int(cr_lift_power*100)}%</font>', unsafe_allow_html=True )
 #st.markdown( '###' )
 
 st.markdown('---')
