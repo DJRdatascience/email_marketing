@@ -8,7 +8,9 @@ import plotly.express as px
 #####################################################################################
 # FUNCTIONS
 #####################################################################################
-def calc_lift_power(rate,known_effect):
+def calc_lift_power(rate,power,obs,alpha):
+    analysis = GofChisquarePower()
+    known_effect = analysis.solve_power(effect_size=None, power=power, nobs=obs, alpha=alpha)
     lift = 0
     calc_effect = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift])
     if calc_effect < known_effect:
@@ -37,18 +39,12 @@ def calc_lift_sig(rate,obs,alpha):
         stat, p, table = proportions_chisquare(count=[rate*obs,(rate+lift)*obs],nobs=[obs,obs])
     return lift
 
-
-def calc_power(rate,power,alpha,lift):
+def calc_power(rate,power,alpha):
     nobs = [ [], [] ]
-    analysis = GofChisquarePower()
-    for l in lift:
-        effect = chisquare_effectsize(np.ones(2)/2, [rate, rate+l])
-        if effect:
-            obs = analysis.solve_power(effect_size=effect, power=power, nobs=None, alpha=alpha)
-            if obs > 800:
-                break
-            nobs[0].append(obs)
-            nobs[1].append(l*100)
+    for obs in range(20,820,20):
+        lift = calc_lift_power(rate,power,alpha)
+        nobs[0].append(obs)
+        nobs[1].append(lift*100)
     return nobs
 
 def calc_sig(rate,alpha):
@@ -103,10 +99,11 @@ st.sidebar.markdown(
 )
 
 # Perform some calculations
-analysis = GofChisquarePower()
-effect = analysis.solve_power(effect_size=None, power=POWER/100, nobs=OBS, alpha=ALPHA/100)
-or_lift_power = calc_lift_power(OR/100,effect)
-cr_lift_power = calc_lift_power(CR/100,effect)
+#analysis = GofChisquarePower()
+#effect = analysis.solve_power(effect_size=None, power=POWER/100, nobs=OBS, alpha=ALPHA/100)
+#calc_lift_power(rate,power,obs,alpha)
+or_lift_power = calc_lift_power(OR/100,POWER/100,OBS,ALPHA/100)
+cr_lift_power = calc_lift_power(CR/100,POWER/100,OBS,ALPHA/100)
 or_lift_sig = calc_lift_sig(OR/100,OBS,ALPHA/100)
 cr_lift_sig = calc_lift_sig(CR/100,OBS,ALPHA/100)
 
@@ -124,8 +121,8 @@ st.markdown('---')
 # Open rate plots
 #------------------------------------------------------------------------------------
 
-LIFT = 1.5**(-np.logspace(0.1,1,100))
-test_power = calc_power(OR/100,POWER/100,ALPHA/100,LIFT)
+#LIFT = 1.5**(-np.logspace(0.1,1,100))
+test_power = calc_power(OR/100,POWER/100,ALPHA/100)
 test_sig = calc_sig(OR/100,ALPHA/100)
 
 #~~~~~~~~~~
@@ -188,8 +185,8 @@ st.markdown('---')
 # Click rate plots
 #------------------------------------------------------------------------------------
 
-LIFT = 0.1/np.logspace(0,2,100)
-test_power = calc_power(CR/100,POWER/100,ALPHA/100,LIFT)
+#LIFT = 0.1/np.logspace(0,2,100)
+test_power = calc_power(CR/100,POWER/100,ALPHA/100)
 test_sig = calc_sig(CR/100,ALPHA/100)
 
 fig1 = px.line(
