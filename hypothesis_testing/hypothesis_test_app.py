@@ -3,9 +3,6 @@ import numpy as np
 from statsmodels.stats.gof import chisquare_effectsize
 from statsmodels.stats.power import GofChisquarePower
 from statsmodels.stats.proportion import proportions_chisquare
-
-#from statsmodels.stats.power import TTestIndPower
-#from statsmodels.stats.proportion import proportion_effectsize
 import plotly.express as px
 
 #####################################################################################
@@ -24,15 +21,32 @@ def calc_power(rate,power,alpha,lift):
             nobs[1].append(l*100)
     return nobs
 
-def calc_signif(rate,alpha,lift=np.flip(2**(-np.logspace(0.1,.8,150)))):#np.flip(LIFT)
+def calc_sig(rate,alpha):
     nobs = [ [], [] ]
     for obs in range(10,810,10):
-        for l in lift:
-            stat, p, table = proportions_chisquare(count=[rate*obs,(rate+l)*obs],nobs=[obs,obs])
-            if p < alpha:
-                nobs[0].append(obs)
-                nobs[1].append(l*100)
-                break
+        
+        lift = 1-rate
+        stat, p, table = proportions_chisquare(count=[rate*obs,(rate+lift)*obs],nobs=[obs,obs])
+        
+        if p < alpha:
+            lift_inc = 0.2
+            last_sign = -1
+            len = 0
+            while abs(p - alpha) > 0.001:
+                sign = np.sign(p-alpha)
+                if last_sign+sign == 0:
+                    lift_inc /= 2
+                lift += sign*lift_inc
+                if lift < 0:
+                    lift = 0.0001
+                last_sign = sign
+
+                stat, p, table = proportions_chisquare(count=[rate*obs,(rate+lift)*obs],nobs=[obs,obs])
+                len += 1
+                if len == 20:
+                    break
+            nobs[0].append(obs)
+            nobs[1].append(lift*100)
     return nobs
 
 #####################################################################################
@@ -83,9 +97,9 @@ st.markdown('---')
 # Open rate plots
 #------------------------------------------------------------------------------------
 
-LIFT = np.arange(0.6,0,-0.005)
+LIFT = 1.5**(-np.logspace(0.1,1,100))
 test_power = calc_power(OR/100,POWER/100,ALPHA/100,LIFT)
-test_signif = calc_signif(OR/100,ALPHA/100)
+test_signif = calc_sig(OR/100,ALPHA/100)
 
 #~~~~~~~~~~
 # Statistical power
@@ -149,7 +163,8 @@ st.markdown('---')
 
 LIFT = 0.1/np.logspace(0,2,100)
 test_power = calc_power(CR/100,POWER/100,ALPHA/100,LIFT)
-test_signif = calc_signif(CR/100,ALPHA/100)
+test_signif = calc_sig(CR/100,ALPHA/100)
+
 #~~~~~~~~~~
 # Statistical power
 #~~~~~~~~~~
