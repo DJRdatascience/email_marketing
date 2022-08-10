@@ -107,8 +107,8 @@ analysis = GofChisquarePower()
 effect = analysis.solve_power(effect_size=None, power=POWER/100, nobs=OBS, alpha=ALPHA/100)
 or_lift_power = calc_lift_power(OR/100,effect)
 cr_lift_power = calc_lift_power(CR/100,effect)
-or_lift_sig = calc_lift_sig(OR,OBS,ALPHA)
-cr_lift_sig = calc_lift_sig(OR,CR,ALPHA)
+or_lift_sig = calc_lift_sig(OR/100,OBS/100,ALPHA/100)
+cr_lift_sig = calc_lift_sig(OR/100,CR/100,ALPHA/100)
 
 #####################################################################################
 # MAIN PAGE
