@@ -28,7 +28,7 @@ def calc_lift_power(rate,power,obs,alpha):
 def calc_lift_sig(rate,obs,alpha):
     lift = 0
     stat, p, table = proportions_chisquare(count=[rate*obs,(rate+lift)*obs],nobs=[obs,obs])
-    lift_inc = 0.2
+    lift_inc = 0.1
     last_sign = 1
     while abs(p - alpha) > 0.001:
         sign = np.sign(p-alpha)
