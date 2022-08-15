@@ -9,7 +9,7 @@ import plotly.express as px
 # FUNCTIONS
 #####################################################################################
 
-def calc_chipower( param_calc, args ):
+def calc_chipower( param_calc, *args ):
 
     # unpack arguments, last argument can be either lift (if param_calc=='Lift') or nobs (if param_calc=='Recipients')
     rate, alpha, power, last = args
