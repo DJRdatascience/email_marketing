@@ -39,9 +39,6 @@ def calc_chipower( param_calc, *args ):
 
         return lift
 
-#def iter_nobs( *args, obs_it = range(20,820,20) ):
-#    return [ 100*calc_chipower( 'Recipients', *args, obs ) for obs in obs_it ]
-
 def make_plot( param_calc, x, y, base_rate, param_input, t ):
 
     fig = px.line(
@@ -162,8 +159,6 @@ fig1 = make_plot( param_in, observations, test_or, or_in, obs_or_in, 'Open Rate'
 #~~~~~~~~~~
 # Click rate
 #~~~~~~~~~~
-
-#test_cr = iter_nobs( cr_in/100, alpha_in/100, power_in/100, obs_it=observations )
 test_cr = list( map( lambda obs: 100*calc_chipower( 'Recipients', cr_in/100, alpha_in/100, power_in/100, obs ), observations ) )
 fig2 = make_plot( param_in, observations, test_cr, cr_in, obs_cr_in, 'Click Rate' )
 
@@ -171,6 +166,5 @@ fig2 = make_plot( param_in, observations, test_cr, cr_in, obs_cr_in, 'Click Rate
 # Plot figures
 #~~~~~~~~~~
 left_column, right_column = st.columns(2)
-
 left_column.plotly_chart( fig1, use_container_width=True )
 right_column.plotly_chart( fig2, use_container_width=True )
