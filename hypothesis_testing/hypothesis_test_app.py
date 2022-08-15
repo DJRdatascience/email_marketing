@@ -153,14 +153,14 @@ observations = range(20,820,20)
 # Open rate
 #~~~~~~~~~~
 
-test_or = iter_nobs( param_in, or_in/100, alpha_in/100, power_in/100, obs_it=observations )
+test_or = iter_nobs( or_in/100, alpha_in/100, power_in/100, obs_it=observations )
 fig1 = make_plot( observations, test_or, or_in, obs_or_in, 'Open Rate' )
 
 #~~~~~~~~~~
 # Click rate
 #~~~~~~~~~~
 
-test_cr = iter_nobs( param_in, cr_in/100, alpha_in/100, power_in/100, obs_it=observations )
+test_cr = iter_nobs( cr_in/100, alpha_in/100, power_in/100, obs_it=observations )
 fig2 = make_plot( observations, test_cr, cr_in, obs_cr_in, 'Click Rate' )
 
 #~~~~~~~~~~
