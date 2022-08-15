@@ -1,3 +1,4 @@
+from ast import AsyncFunctionDef
 import streamlit as st
 import numpy as np
 from statsmodels.stats.gof import chisquare_effectsize
@@ -8,36 +9,40 @@ import plotly.express as px
 # FUNCTIONS
 #####################################################################################
 
-def calc_lift( args, obs ):
+def calc_chipower( param_calc, args ):
 
-    # unpack arguments
-    rate, alpha, power = args
+    # unpack arguments, last argument can be either lift (if param_calc=='Lift') or nobs (if param_calc=='Recipients')
+    rate, alpha, power, last = args
 
     # set-up analysis
     analysis = GofChisquarePower()
 
     # calculate effect size
-    known = analysis.solve_power(effect_size=None, power=power, nobs=obs, alpha=alpha)
+    if param_calc == 'Lift':
+        effect_size = chisquare_effectsize( np.ones(2)/2, [rate, rate+last] )
+        return analysis.solve_power(effect_size=effect_size, power=power, nobs=None, alpha=alpha)
+    else:
+        known = analysis.solve_power(effect_size=None, power=power, nobs=last, alpha=alpha)
 
-    # Newton's method - we use this because GofChisquarePower solves for effect size, and we want to know lift
-    lift = 0 # initial guess
-    calculated = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift]) # calculated effect size for the guessed value of lift
-    inc = 0.1 # aribitrarily small value for initial step size between guesses
-    last_sign = np.sign( known - calculated ) # used in Newton's method
-    while abs( known - calculated ) > 0.001: # runs until calculated and known lift sizes are within 0.001
-        sign = np.sign( known - calculated )
-        if last_sign+sign == 0:
-            inc /= 2
-        last_sign = sign
-        lift += sign*inc
-        calculated = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift])
+        # Newton's method - we use this because GofChisquarePower solves for effect size, and we want to know lift
+        lift = 0 # initial guess
+        calculated = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift]) # calculated effect size for the guessed value of lift
+        inc = 0.1 # aribitrarily small value for initial step size between guesses
+        last_sign = np.sign( known - calculated ) # used in Newton's method
+        while abs( known - calculated ) > 0.001: # runs until calculated and known lift sizes are within 0.001
+            sign = np.sign( known - calculated )
+            if last_sign+sign == 0:
+                inc /= 2
+            last_sign = sign
+            lift += sign*inc
+            calculated = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift])
 
-    return lift
+        return lift
 
 def iter_nobs( *args, obs_it = range(20,820,20) ):
-    return [ 100*calc_lift( args, obs ) for obs in obs_it ]
+    return [ 100*calc_chipower( 'Recipients', args+(obs,) ) for obs in obs_it ]
 
-def make_plot( x, y, user_input, t ):
+def make_plot( param_calc, x, y, param_input, base_rate, t ):
 
     fig = px.line(
         x = x,
@@ -46,16 +51,22 @@ def make_plot( x, y, user_input, t ):
         title=f'<b>{t}</b>',
         template='simple_white'
     )
-    fig.add_vline( x=user_input, line_width=3, line_color='#D62728', annotation_text='Input',
-                    annotation_position='top left', annotation_textangle=270,
-                    annotation_font={'color':'#D62728'} )
+
+    if param_calc == 'Recipients':
+        fig.add_vline( x=param_input, line_width=3, line_color='#D62728', annotation_text='Input',
+                        annotation_position='top left', annotation_textangle=270,
+                        annotation_font={'color':'#D62728'} )
+    else:
+        fig.add_hline( x=param_input, line_width=3, line_color='#D62728', annotation_text='Input',
+                        annotation_position='top left', annotation_textangle=270,
+                        annotation_font={'color':'#D62728'} )
 
     fig.update_traces(showlegend=False)
 
     fig.update_layout(
         plot_bgcolor='rgba(0,0,0,0)',
         xaxis={'title_text': 'Number of Recipients'},
-        yaxis={'title_text': f'Lift above {or_in}% (%)'},
+        yaxis={'title_text': f'Lift above {base_rate}% (%)'},
     )
 
     return fig
@@ -75,12 +86,21 @@ st.set_page_config( page_title='Hypothesis_Testing',
 st.sidebar.header('Email parameters')
 
 param_in = st.sidebar.selectbox(
-    'Choose input parameter', [ 'Lift', 'Recipients' ]
+    'Choose input parameter', [ 'Recipients', 'Lift' ]
 )
 
-obs_in = st.sidebar.number_input(
-    'Recipients',value=300,min_value=20,max_value=800,step=1
-)
+if param_in == 'Recipients':
+    obs_or_in = st.sidebar.number_input(
+        'Recipients',value=300,min_value=20,max_value=800,step=1
+    )
+    obs_cr_in = obs_or_in # If we are using an input number of recipients, we do not select open-rate and click-rate numbers seperately
+else: # If we are using an input lift, we calculate open-rate and click-rate numbers seperately
+    obs_or_in = st.sidebar.number_input(
+        'Lift (open rate)', value=7, min_value=0.5, max_value=50, step=0.1
+    )
+    obs_cr_in = st.sidebar.number_input(
+        'Lift (click rate)', value=0.5, min_value=0.1, max_value=3.5, step=0.1
+    )
 
 or_in = st.sidebar.slider(
     'Base open rate (%)', min_value=20, max_value=40, value=30, step=1
@@ -110,14 +130,16 @@ st.sidebar.markdown(
 # MAIN PAGE
 #####################################################################################
 
-# Perform some calculations
-or_lift = calc_lift( (or_in/100, alpha_in/100, power_in/100), obs_in )
-cr_lift = calc_lift( (cr_in/100, alpha_in/100, power_in/100), obs_in )
+param_dict = { 'Recipients':[1,'lift','% lift'], 'Lift':[0,'recipients','recipients'] }
 
-st.markdown( '# Minimum lift' )
-st.markdown( 'To meet input power and significance, we would need to see the following lifts.' )
-st.markdown( f'## Open rate = <font color="#D62728">{ round(or_lift*100,1) }%</font>', unsafe_allow_html=True )
-st.markdown( f'## Click rate = <font color="#D62728">{ round(cr_lift*100,1) }%</font>', unsafe_allow_html=True )
+# Calculate the minimum lift or number of recipients to meet input criteria
+required_or = round( calc_chipower( param_in, or_in/100, alpha_in/100, power_in/100, obs_or_in ) * 100, param_dict[param_in][0] )
+required_cr = round( calc_chipower( param_in, cr_in/100, alpha_in/100, power_in/100, obs_cr_in ) * 100, param_dict[param_in][0] )
+
+st.markdown( f'# Minimum { param_dict[param_in][1] }' )
+st.markdown( 'To meet input power and significance, we would need to see the following.' )
+st.markdown( f'## Open rate: <font color="#D62728">{ required_or } { param_dict[param_in][1] }</font>', unsafe_allow_html=True )
+st.markdown( f'## Click rate: <font color="#D62728">{ required_or } { param_dict[param_in][1] }</font>', unsafe_allow_html=True )
 st.markdown('---')
 
 #------------------------------------------------------------------------------------
@@ -131,15 +153,15 @@ observations = range(20,820,20)
 # Open rate
 #~~~~~~~~~~
 
-test_or = iter_nobs( or_in/100, alpha_in/100, power_in/100, obs_it=observations )
-fig1 = make_plot( observations, test_or, obs_in, 'Open Rate' )
+test_or = iter_nobs( param_in, or_in/100, alpha_in/100, power_in/100, obs_it=observations )
+fig1 = make_plot( observations, test_or, or_in, obs_or_in, 'Open Rate' )
 
 #~~~~~~~~~~
 # Click rate
 #~~~~~~~~~~
 
-test_cr = iter_nobs( cr_in/100, alpha_in/100, power_in/100, obs_it=observations )
-fig2 = make_plot( observations, test_cr, obs_in, 'Click Rate' )
+test_cr = iter_nobs( param_in, cr_in/100, alpha_in/100, power_in/100, obs_it=observations )
+fig2 = make_plot( observations, test_cr, cr_in, obs_cr_in, 'Click Rate' )
 
 #~~~~~~~~~~
 # Plot figures
