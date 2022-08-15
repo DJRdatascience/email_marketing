@@ -19,7 +19,7 @@ def calc_chipower( param_calc, *args ):
 
     # calculate effect size
     if param_calc == 'Lift':
-        effect_size = chisquare_effectsize( np.ones(2)/2, [rate, rate+last] )
+        effect_size = chisquare_effectsize( np.ones(2)/2, [rate, rate+last/100] )
         return analysis.solve_power(effect_size=effect_size, power=power, nobs=None, alpha=alpha)
     else:
         known = analysis.solve_power(effect_size=None, power=power, nobs=last, alpha=alpha)
