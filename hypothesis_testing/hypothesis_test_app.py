@@ -96,7 +96,7 @@ if param_in == 'Recipients':
     obs_cr_in = obs_or_in # If we are using an input number of recipients, we do not select open-rate and click-rate numbers seperately
 else: # If we are using an input lift, we calculate open-rate and click-rate numbers seperately
     obs_or_in = st.sidebar.number_input(
-        'Lift (open rate)', value=7, min_value=0.5, max_value=50, step=0.1
+        'Lift (open rate)', value=7.0, min_value=0.5, max_value=50.0, step=0.1
     )
     obs_cr_in = st.sidebar.number_input(
         'Lift (click rate)', value=0.5, min_value=0.1, max_value=3.5, step=0.1
