@@ -39,8 +39,8 @@ def calc_chipower( param_calc, *args ):
 
         return lift
 
-def iter_nobs( *args, obs_it = range(20,820,20) ):
-    return [ 100*calc_chipower( 'Recipients', *args, obs ) for obs in obs_it ]
+#def iter_nobs( *args, obs_it = range(20,820,20) ):
+#    return [ 100*calc_chipower( 'Recipients', *args, obs ) for obs in obs_it ]
 
 def make_plot( param_calc, x, y, base_rate, param_input, t ):
 
@@ -157,14 +157,14 @@ observations = range(20,820,20)
 # Open rate
 #~~~~~~~~~~
 test_or = list( map( lambda obs: 100*calc_chipower( 'Recipients', or_in/100, alpha_in/100, power_in/100, obs ), observations ) )
-#test_or = iter_nobs( or_in/100, alpha_in/100, power_in/100, obs_it=observations )
 fig1 = make_plot( param_in, observations, test_or, or_in, obs_or_in, 'Open Rate' )
 
 #~~~~~~~~~~
 # Click rate
 #~~~~~~~~~~
 
-test_cr = iter_nobs( cr_in/100, alpha_in/100, power_in/100, obs_it=observations )
+#test_cr = iter_nobs( cr_in/100, alpha_in/100, power_in/100, obs_it=observations )
+test_cr = list( map( lambda obs: 100*calc_chipower( 'Recipients', cr_in/100, alpha_in/100, power_in/100, obs ), observations ) )
 fig2 = make_plot( param_in, observations, test_cr, cr_in, obs_cr_in, 'Click Rate' )
 
 #~~~~~~~~~~
