@@ -23,9 +23,9 @@ def calc_lift( args, obs ):
     lift = 0 # initial guess
     calculated = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift]) # calculated effect size for the guessed value of lift
     inc = 0.1 # aribitrarily small value for initial step size between guesses
-    last_sign = np.sign( calculated - known ) # used in Newton's method
-    while abs( calculated - known ) > 0.001: # runs until calculated and known lift sizes are within 0.001
-        sign = np.sign( calculated - known )
+    last_sign = np.sign( known - calculated ) # used in Newton's method
+    while abs( known - calculated ) > 0.001: # runs until calculated and known lift sizes are within 0.001
+        sign = np.sign( known - calculated )
         if last_sign+sign == 0:
             inc /= 2
         last_sign = sign
