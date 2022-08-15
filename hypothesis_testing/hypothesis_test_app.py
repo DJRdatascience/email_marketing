@@ -74,6 +74,10 @@ st.set_page_config( page_title='Hypothesis_Testing',
 
 st.sidebar.header('Email parameters')
 
+param_in = st.selectbox(
+    'Choose input parameter', [ 'Lift', 'Recipients' ]
+)
+
 obs_in = st.sidebar.number_input(
     'Recipients',value=300,min_value=20,max_value=800,step=1
 )
