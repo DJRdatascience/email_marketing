@@ -38,7 +38,7 @@ def iter_nobs( *args, obs_it = range(20,820,20) ):
     return [ 100*calc_lift( args, obs ) for obs in obs_it ]
 
 def make_plot( x, y, user_input, t ):
-    
+
     fig = px.line(
         x = x,
         y = y,
@@ -128,36 +128,18 @@ observations = range(20,820,20)
 #~~~~~~~~~~
 
 test_or = iter_nobs( or_in/100, alpha_in/100, power_in/100, obs_it=observations )
-fig1 = make_plot( observations, test_or, or_in, 'Open Rate' )
+fig1 = make_plot( observations, test_or, obs_in, 'Open Rate' )
 
 #~~~~~~~~~~
 # Click rate
 #~~~~~~~~~~
 
 test_cr = iter_nobs( cr_in/100, alpha_in/100, power_in/100, obs_it=observations )
-
-fig2 = px.line(
-    x = observations,
-    y = test_cr,
-    orientation='h',
-    title='<b>Significance</b>',
-    template='simple_white'
-)
-fig2.add_vline( x=obs_in,line_width=3,line_color='#D62728',annotation_text='Input',
-                annotation_position='top left',annotation_textangle=270,
-                annotation_font={'color':'#D62728'})
-fig2.update_traces(showlegend=False)
-
-fig2.update_layout(
-    plot_bgcolor='rgba(0,0,0,0)',
-    xaxis={'title_text': 'Number of Recipients'},
-    yaxis={'title_text': f'Lift above {or_in}% (%)'},
-)
+fig2 = make_plot( observations, test_cr, obs_in, 'Click Rate' )
 
 #~~~~~~~~~~
 # Plot figures
 #~~~~~~~~~~
-st.markdown( '## Open Rate' )
 left_column, right_column = st.columns(2)
 
 left_column.plotly_chart( fig1, use_container_width=True )
