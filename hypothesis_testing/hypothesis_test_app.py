@@ -40,7 +40,7 @@ def calc_chipower( param_calc, *args ):
         return lift
 
 def iter_nobs( *args, obs_it = range(20,820,20) ):
-    return [ 100*calc_chipower( 'Recipients', args+(obs,) ) for obs in obs_it ]
+    return [ 100*calc_chipower( 'Recipients', *args, obs ) for obs in obs_it ]
 
 def make_plot( param_calc, x, y, param_input, base_rate, t ):
 
@@ -138,8 +138,8 @@ required_cr = round( calc_chipower( param_in, cr_in/100, alpha_in/100, power_in/
 
 st.markdown( f'# Minimum { param_dict[param_in][1] }' )
 st.markdown( 'To meet input power and significance, we would need to see the following.' )
-st.markdown( f'## Open rate: <font color="#D62728">{ required_or } { param_dict[param_in][1] }</font>', unsafe_allow_html=True )
-st.markdown( f'## Click rate: <font color="#D62728">{ required_or } { param_dict[param_in][1] }</font>', unsafe_allow_html=True )
+st.markdown( f'## Open rate: <font color="#D62728">{ required_or } { param_dict[param_in][2] }</font>', unsafe_allow_html=True )
+st.markdown( f'## Click rate: <font color="#D62728">{ required_cr } { param_dict[param_in][2] }</font>', unsafe_allow_html=True )
 st.markdown('---')
 
 #------------------------------------------------------------------------------------
