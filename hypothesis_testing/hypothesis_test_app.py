@@ -107,8 +107,8 @@ observations = range(20,820,20)
 test_or = iter_nobs( or_in/100, alpha_in/100, power_in/100, obs_it=observations )
 
 fig1 = px.line(
-    x = test_or,
-    y = observations,
+    x = observations,
+    y = test_or,
     orientation='h',
     title='<b>Statistical Power</b>',
     template='simple_white'
@@ -132,8 +132,8 @@ fig1.update_layout(
 test_cr = iter_nobs( cr_in/100, alpha_in/100, power_in/100, obs_it=observations )
 
 fig2 = px.line(
-    x = test_cr,
-    y = observations,
+    x = observations,
+    y = test_cr,
     orientation='h',
     title='<b>Significance</b>',
     template='simple_white'
