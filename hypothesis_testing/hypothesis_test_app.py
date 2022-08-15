@@ -99,7 +99,7 @@ else: # If we are using an input lift, we calculate open-rate and click-rate num
         'Lift (open rate)', value=8.0, min_value=0.5, max_value=50.0, step=0.1
     )
     obs_cr_in = st.sidebar.number_input(
-        'Lift (click rate)', value=0.8, min_value=0.1, max_value=3.5, step=0.1
+        'Lift (click rate)', value=0.5, min_value=0.1, max_value=3.5, step=0.1
     )
 
 or_in = st.sidebar.slider(
