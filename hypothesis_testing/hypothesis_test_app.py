@@ -130,7 +130,7 @@ st.sidebar.markdown(
 # MAIN PAGE
 #####################################################################################
 
-param_dict = { 'Recipients':[1,'lift','% lift'], 'Lift':[0,'recipients','recipients'] }
+param_dict = { 'Recipients':[1,'lift','% lift'], 'Lift':[0,'recipients',' recipients'] }
 
 # Calculate the minimum lift or number of recipients to meet input criteria
 required_or = round( calc_chipower( param_in, or_in/100, alpha_in/100, power_in/100, obs_or_in ) * 100, param_dict[param_in][0] )
@@ -138,8 +138,8 @@ required_cr = round( calc_chipower( param_in, cr_in/100, alpha_in/100, power_in/
 
 st.markdown( f'# Minimum { param_dict[param_in][1] }' )
 st.markdown( 'To meet input power and significance, we would need to see the following.' )
-st.markdown( f'## Open rate: <font color="#D62728">{ required_or } { param_dict[param_in][2] }</font>', unsafe_allow_html=True )
-st.markdown( f'## Click rate: <font color="#D62728">{ required_cr } { param_dict[param_in][2] }</font>', unsafe_allow_html=True )
+st.markdown( f'## Open rate: <font color="#D62728">{ required_or }{ param_dict[param_in][2] }</font>', unsafe_allow_html=True )
+st.markdown( f'## Click rate: <font color="#D62728">{ required_cr }{ param_dict[param_in][2] }</font>', unsafe_allow_html=True )
 st.markdown('---')
 
 #------------------------------------------------------------------------------------
@@ -154,14 +154,14 @@ observations = range(20,820,20)
 #~~~~~~~~~~
 
 test_or = iter_nobs( or_in/100, alpha_in/100, power_in/100, obs_it=observations )
-fig1 = make_plot( observations, test_or, or_in, obs_or_in, 'Open Rate' )
+fig1 = make_plot( param_in, observations, test_or, or_in, obs_or_in, 'Open Rate' )
 
 #~~~~~~~~~~
 # Click rate
 #~~~~~~~~~~
 
 test_cr = iter_nobs( cr_in/100, alpha_in/100, power_in/100, obs_it=observations )
-fig2 = make_plot( observations, test_cr, cr_in, obs_cr_in, 'Click Rate' )
+fig2 = make_plot( param_in, observations, test_cr, cr_in, obs_cr_in, 'Click Rate' )
 
 #~~~~~~~~~~
 # Plot figures
