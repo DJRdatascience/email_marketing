@@ -2,17 +2,16 @@ import streamlit as st
 import numpy as np
 from statsmodels.stats.gof import chisquare_effectsize
 from statsmodels.stats.power import GofChisquarePower
-from statsmodels.stats.proportion import proportions_chisquare
 import plotly.express as px
 
 #####################################################################################
 # FUNCTIONS
 #####################################################################################
 
-def calc_lift( *args ):
+def calc_lift( args, obs ):
 
     # unpack arguments
-    rate, alpha, power, obs = args
+    rate, alpha, power = args
 
     # set-up analysis
     analysis = GofChisquarePower()
@@ -36,7 +35,7 @@ def calc_lift( *args ):
     return lift
 
 def iter_nobs( *args, obs_it = range(20,820,20) ):
-    return [ 100*calc_lift( args+(obs) ) for obs in obs_it ]
+    return [ 100*calc_lift( args, obs ) for obs in obs_it ]
 
 #####################################################################################
 # SETUP PAGE
