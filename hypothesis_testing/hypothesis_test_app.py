@@ -58,7 +58,7 @@ def make_plot( param_calc, x, y, base_rate, param_input, t ):
                         annotation_font={'color':'#D62728'} )
     else:
         fig.add_hline( y=param_input, line_width=3, line_color='#D62728', annotation_text='Input',
-                        annotation_position='top left', annotation_textangle=270,
+                        annotation_position='top right', annotation_textangle=0,
                         annotation_font={'color':'#D62728'} )
 
     fig.update_traces(showlegend=False)
@@ -136,9 +136,9 @@ param_dict = { 'Recipients':['lift','% lift'], 'Lift':['recipients',' recipients
 required_or = calc_chipower( param_in, or_in/100, alpha_in/100, power_in/100, obs_or_in ) * 100
 required_cr = calc_chipower( param_in, cr_in/100, alpha_in/100, power_in/100, obs_cr_in ) * 100
 if param_in == 'Recipients':
-    required_or, required_cr = round(required_or), round(required_cr)
+    required_or, required_cr = round( required_or, 1 ), round( required_cr, 1 )
 else:
-    required_or, required_cr = round(required_or,1 ), round(required_cr, 1)
+    required_or, required_cr = round( required_or ), round( required_cr )
 
 st.markdown( f'# Minimum { param_dict[param_in][0] }' )
 st.markdown( 'To meet input power and significance, we would need to see the following.' )
