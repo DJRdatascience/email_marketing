@@ -37,6 +37,26 @@ def calc_lift( args, obs ):
 def iter_nobs( *args, obs_it = range(20,820,20) ):
     return [ 100*calc_lift( args, obs ) for obs in obs_it ]
 
+def make_plot( x, y, user_input, t ):
+    fig = px.line(
+        x = x,
+        y = y,
+        orientation='h',
+        title=f'<b>{t}</b>',
+        template='simple_white'
+    )
+    fig.add_vline( x=user_input, line_width=3, line_color='#D62728', annotation_text='Input',
+                    annotation_position='top left', annotation_textangle=270,
+                    annotation_font={'color':'#D62728'} )
+
+    fig.update_traces(showlegend=False)
+
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis={'title_text': 'Number of Recipients'},
+        yaxis={'title_text': f'Lift above {or_in}% (%)'},
+    )
+
 #####################################################################################
 # SETUP PAGE
 #####################################################################################
@@ -105,25 +125,7 @@ observations = range(20,820,20)
 #~~~~~~~~~~
 
 test_or = iter_nobs( or_in/100, alpha_in/100, power_in/100, obs_it=observations )
-
-fig1 = px.line(
-    x = observations,
-    y = test_or,
-    orientation='h',
-    title='<b>Statistical Power</b>',
-    template='simple_white'
-)
-fig1.add_vline( x=obs_in,line_width=3,line_color='#D62728',annotation_text='Input',
-                annotation_position='top left',annotation_textangle=270,
-                annotation_font={'color':'#D62728'})
-
-fig1.update_traces(showlegend=False)
-
-fig1.update_layout(
-    plot_bgcolor='rgba(0,0,0,0)',
-    xaxis={'title_text': 'Number of Recipients'},
-    yaxis={'title_text': f'Lift above {or_in}% (%)'},
-)
+fig1 = make_plot( observations, test_or, or_in, 'Open Rate' )
 
 #~~~~~~~~~~
 # Click rate
