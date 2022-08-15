@@ -57,7 +57,7 @@ def make_plot( param_calc, x, y, base_rate, param_input, t ):
                         annotation_position='top left', annotation_textangle=270,
                         annotation_font={'color':'#D62728'} )
     else:
-        fig.add_hline( x=param_input, line_width=3, line_color='#D62728', annotation_text='Input',
+        fig.add_hline( y=param_input, line_width=3, line_color='#D62728', annotation_text='Input',
                         annotation_position='top left', annotation_textangle=270,
                         annotation_font={'color':'#D62728'} )
 
@@ -96,10 +96,10 @@ if param_in == 'Recipients':
     obs_cr_in = obs_or_in # If we are using an input number of recipients, we do not select open-rate and click-rate numbers seperately
 else: # If we are using an input lift, we calculate open-rate and click-rate numbers seperately
     obs_or_in = st.sidebar.number_input(
-        'Lift (open rate)', value=7.0, min_value=0.5, max_value=50.0, step=0.1
+        'Lift (open rate)', value=8.0, min_value=0.5, max_value=50.0, step=0.1
     )
     obs_cr_in = st.sidebar.number_input(
-        'Lift (click rate)', value=0.5, min_value=0.1, max_value=3.5, step=0.1
+        'Lift (click rate)', value=0.8, min_value=0.1, max_value=3.5, step=0.1
     )
 
 or_in = st.sidebar.slider(
@@ -130,16 +130,20 @@ st.sidebar.markdown(
 # MAIN PAGE
 #####################################################################################
 
-param_dict = { 'Recipients':[1,'lift','% lift'], 'Lift':[0,'recipients',' recipients'] }
+param_dict = { 'Recipients':['lift','% lift'], 'Lift':['recipients',' recipients'] }
 
 # Calculate the minimum lift or number of recipients to meet input criteria
-required_or = round( calc_chipower( param_in, or_in/100, alpha_in/100, power_in/100, obs_or_in ) * 100, param_dict[param_in][0] )
-required_cr = round( calc_chipower( param_in, cr_in/100, alpha_in/100, power_in/100, obs_cr_in ) * 100, param_dict[param_in][0] )
+required_or = calc_chipower( param_in, or_in/100, alpha_in/100, power_in/100, obs_or_in ) * 100
+required_cr = calc_chipower( param_in, cr_in/100, alpha_in/100, power_in/100, obs_cr_in ) * 100
+if param_in == 'Recipients':
+    required_or, required_cr = round(required_or), round(required_cr)
+else:
+    required_or, required_cr = round(required_or,1 ), round(required_cr, 1)
 
-st.markdown( f'# Minimum { param_dict[param_in][1] }' )
+st.markdown( f'# Minimum { param_dict[param_in][0] }' )
 st.markdown( 'To meet input power and significance, we would need to see the following.' )
-st.markdown( f'## Open rate: <font color="#D62728">{ required_or }{ param_dict[param_in][2] }</font>', unsafe_allow_html=True )
-st.markdown( f'## Click rate: <font color="#D62728">{ required_cr }{ param_dict[param_in][2] }</font>', unsafe_allow_html=True )
+st.markdown( f'## Open rate: <font color="#D62728">{ required_or }{ param_dict[param_in][1] }</font>', unsafe_allow_html=True )
+st.markdown( f'## Click rate: <font color="#D62728">{ required_cr }{ param_dict[param_in][1] }</font>', unsafe_allow_html=True )
 st.markdown('---')
 
 #------------------------------------------------------------------------------------
