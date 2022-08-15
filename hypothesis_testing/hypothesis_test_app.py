@@ -84,8 +84,8 @@ st.sidebar.markdown(
 #####################################################################################
 
 # Perform some calculations
-or_lift = calc_lift( or_in/100, alpha_in/100, power_in/100, obs_in )
-cr_lift = calc_lift( cr_in/100, alpha_in/100, power_in/100, obs_in )
+or_lift = calc_lift( (or_in/100, alpha_in/100, power_in/100), obs_in )
+cr_lift = calc_lift( (cr_in/100, alpha_in/100, power_in/100), obs_in )
 
 st.markdown( '# Minimum lift' )
 st.markdown( 'To meet input power and significance, we would need to see the following lifts.' )
