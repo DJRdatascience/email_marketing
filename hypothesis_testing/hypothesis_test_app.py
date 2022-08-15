@@ -38,6 +38,7 @@ def iter_nobs( *args, obs_it = range(20,820,20) ):
     return [ 100*calc_lift( args, obs ) for obs in obs_it ]
 
 def make_plot( x, y, user_input, t ):
+    
     fig = px.line(
         x = x,
         y = y,
@@ -56,6 +57,8 @@ def make_plot( x, y, user_input, t ):
         xaxis={'title_text': 'Number of Recipients'},
         yaxis={'title_text': f'Lift above {or_in}% (%)'},
     )
+
+    return fig
 
 #####################################################################################
 # SETUP PAGE
