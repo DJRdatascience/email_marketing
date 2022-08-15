@@ -136,7 +136,7 @@ param_dict = { 'Recipients':['lift','% lift'], 'Lift':['recipients',' recipients
 required_or = calc_chipower( param_in, or_in/100, alpha_in/100, power_in/100, obs_or_in )
 required_cr = calc_chipower( param_in, cr_in/100, alpha_in/100, power_in/100, obs_cr_in )
 if param_in == 'Recipients':
-    required_or, required_cr = round( required_or*100, 1 ), round( required_cr*100, 1 )
+    required_or, required_cr = round( required_or*100, 1 ), round( required_cr*100, 2 )
 else:
     required_or, required_cr = round( required_or ), round( required_cr )
 
