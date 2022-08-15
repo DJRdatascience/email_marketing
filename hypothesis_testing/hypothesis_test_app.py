@@ -42,7 +42,7 @@ def calc_chipower( param_calc, *args ):
 def iter_nobs( *args, obs_it = range(20,820,20) ):
     return [ 100*calc_chipower( 'Recipients', *args, obs ) for obs in obs_it ]
 
-def make_plot( param_calc, x, y, param_input, base_rate, t ):
+def make_plot( param_calc, x, y, base_rate, param_input, t ):
 
     fig = px.line(
         x = x,
