@@ -74,7 +74,7 @@ st.set_page_config( page_title='Hypothesis_Testing',
 
 st.sidebar.header('Email parameters')
 
-param_in = st.selectbox(
+param_in = st.sidebar.selectbox(
     'Choose input parameter', [ 'Lift', 'Recipients' ]
 )
 
