@@ -17,14 +17,15 @@ def calc_chipower( param_calc, *args ):
     # set-up analysis
     analysis = GofChisquarePower()
 
-    # calculate effect size
+    # calculate nobs (lift input)
     if param_calc == 'Lift':
         effect_size = chisquare_effectsize( np.ones(2)/2, [rate, rate+last/100] )
         return analysis.solve_power(effect_size=effect_size, power=power, nobs=None, alpha=alpha)
+    
+    # calculate lift (nobs input)
     else:
-        known = analysis.solve_power(effect_size=None, power=power, nobs=last, alpha=alpha)
-
         # Newton's method - we use this because GofChisquarePower solves for effect size, and we want to know lift
+        known = analysis.solve_power(effect_size=None, power=power, nobs=last, alpha=alpha)
         lift = 0 # initial guess
         calculated = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift]) # calculated effect size for the guessed value of lift
         inc = 0.1 # aribitrarily small value for initial step size between guesses
@@ -36,7 +37,6 @@ def calc_chipower( param_calc, *args ):
             last_sign = sign
             lift += sign*inc
             calculated = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift])
-
         return lift
 
 def make_plot( param_calc, x, y, base_rate, param_input, t ):
