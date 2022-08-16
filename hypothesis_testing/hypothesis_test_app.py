@@ -125,10 +125,10 @@ if param_in == 'Recipients':
     obs_cr_in = obs_or_in # If we are using an input number of recipients, we do not select open-rate and click-rate numbers seperately
 else: # If we are using an input lift, we calculate open-rate and click-rate numbers seperately
     obs_or_in = st.sidebar.number_input(
-        'Lift (open rate)', value=6.0, min_value=0.5, max_value=25.0, step=0.1
+        'Lift (open rate)', value=8.2, min_value=0.5, max_value=25.0, step=0.1
     )
     obs_cr_in = st.sidebar.number_input(
-        'Lift (click rate)', value=2.2, min_value=1.2, max_value=12.0, step=0.1
+        'Lift (click rate)', value=3.1, min_value=0.5, max_value=12.0, step=0.1
     )
 
 or_in = st.sidebar.slider(
@@ -159,7 +159,7 @@ st.sidebar.markdown(
 # MAIN PAGE
 #####################################################################################
 
-param_dict = { 'Recipients':['lift','% lift'], 'Lift':['recipients',' recipients (per group)'] }
+param_dict = { 'Recipients':['lift','%'], 'Lift':['recipients',' (per group)'] }
 
 # Calculate the minimum lift or number of recipients to meet input criteria
 required_or = calc_tpower( param_in, or_in/100, alpha_in/100, power_in/100, obs_or_in )
