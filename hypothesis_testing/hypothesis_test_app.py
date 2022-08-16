@@ -185,13 +185,13 @@ observations = range(20,820,20)
 #~~~~~~~~~~
 # Open rate
 #~~~~~~~~~~
-test_or = list( map( lambda obs: 100*calc_chipower( 'Recipients', or_in/100, alpha_in/100, power_in/100, obs ), observations ) )
+test_or = list( map( lambda obs: 100*calc_tpower( 'Recipients', or_in/100, alpha_in/100, power_in/100, obs ), observations ) )
 fig1 = make_plot( param_in, observations, test_or, or_in, obs_or_in, 'Open Rate' )
 
 #~~~~~~~~~~
 # Click rate
 #~~~~~~~~~~
-test_cr = list( map( lambda obs: 100*calc_chipower( 'Recipients', cr_in/100, alpha_in/100, power_in/100, obs ), observations ) )
+test_cr = list( map( lambda obs: 100*calc_tpower( 'Recipients', cr_in/100, alpha_in/100, power_in/100, obs ), observations ) )
 fig2 = make_plot( param_in, observations, test_cr, cr_in, obs_cr_in, 'Click Rate' )
 
 #~~~~~~~~~~
