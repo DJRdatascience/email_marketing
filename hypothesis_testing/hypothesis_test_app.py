@@ -180,7 +180,7 @@ st.markdown('---')
 #------------------------------------------------------------------------------------
 
 # Number of observations to iterate over
-observations = list( map(round,np.logspace(1.301,2.903,50)) ) #range(20,820,20)
+observations = list( map(round,np.logspace( np.log10(20), np.log10(800), 50 )) )
 
 #~~~~~~~~~~
 # Open rate
