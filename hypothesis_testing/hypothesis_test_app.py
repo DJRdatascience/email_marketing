@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 from statsmodels.stats.gof import chisquare_effectsize
-from statsmodels.stats.power import GofChisquarePower
+from statsmodels.stats.power import GofChisquarePower, TTestIndPower
 import plotly.express as px
 
 #####################################################################################
@@ -36,6 +36,39 @@ def calc_chipower( param_calc, *args ):
             last_sign = sign
             lift += sign*inc
             calculated = chisquare_effectsize(np.ones(2)/2, [rate, rate+lift])
+        return lift
+
+def calc_effectsize( a, b ):
+    return 2 * (np.arcsin(np.sqrt(a)) - np.arcsin(np.sqrt(b)))
+
+def calc_tpower( param_calc, *args ):
+
+    # unpack arguments, last argument can be either lift (if param_calc=='Lift') or nobs (if param_calc=='Recipients')
+    rate, alpha, power, last = args
+
+    # set-up analysis
+    analysis = TTestIndPower()
+
+    # calculate nobs (lift input)
+    if param_calc == 'Lift':
+        effect_size = calc_effectsize( rate+lift, rate )
+        return analysis.solve_power(effect_size=effect_size, power=power, alpha=alpha, nobs1=None, ratio=1, alternative='two-sided' )
+    
+    # calculate lift (nobs input)
+    else:
+        # Newton's method - we use this because TTestIndPower solves for effect size, and we want to know lift
+        known = analysis.solve_power(effect_size=None, power=power, alpha=alpha, nobs1=last, ratio=1, alternative='two-sided' )
+        lift = 0 # initial guess
+        calculated = calc_effectsize( rate+lift, rate ) # calculated effect size for the guessed value of lift
+        inc = 0.1 # aribitrarily small value for initial step size between guesses
+        last_sign = np.sign( known - calculated ) # used in Newton's method
+        while abs( known - calculated ) > 0.001: # runs until calculated and known lift sizes are within 0.001
+            sign = np.sign( known - calculated )
+            if last_sign+sign == 0:
+                inc /= 2
+            last_sign = sign
+            lift += sign*inc
+            calculated = calc_effectsize( rate+lift, rate )
         return lift
 
 def make_plot( param_calc, x, y, base_rate, param_input, t ):
@@ -129,8 +162,8 @@ st.sidebar.markdown(
 param_dict = { 'Recipients':['lift','% lift'], 'Lift':['recipients',' recipients'] }
 
 # Calculate the minimum lift or number of recipients to meet input criteria
-required_or = calc_chipower( param_in, or_in/100, alpha_in/100, power_in/100, obs_or_in )
-required_cr = calc_chipower( param_in, cr_in/100, alpha_in/100, power_in/100, obs_cr_in )
+required_or = calc_tpower( param_in, or_in/100, alpha_in/100, power_in/100, obs_or_in )
+required_cr = calc_tpower( param_in, cr_in/100, alpha_in/100, power_in/100, obs_cr_in )
 if param_in == 'Recipients':
     required_or, required_cr = round( required_or*100, 1 ), round( required_cr*100, 2 )
 else:
