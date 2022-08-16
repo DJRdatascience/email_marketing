@@ -1,4 +1,3 @@
-from ast import AsyncFunctionDef
 import streamlit as st
 import numpy as np
 from statsmodels.stats.gof import chisquare_effectsize
@@ -119,7 +118,7 @@ power_in = st.sidebar.slider(
     'Statistical power (%)', min_value=60, max_value=98, value=80, step=2
 )
 st.sidebar.markdown(
-    '<font color="#1f77b4">Power tells us about our risk of Type II (false negative) error. We want to maximize this.</font>',
+    '<font color="#1f77b4">Power tells us about our chance of avoiding Type II (false negative) error. We want to maximize this.</font>',
     unsafe_allow_html=True
 )
 
