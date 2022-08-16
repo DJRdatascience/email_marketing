@@ -51,7 +51,7 @@ def calc_tpower( param_calc, *args ):
 
     # calculate nobs (lift input)
     if param_calc == 'Lift':
-        effect_size = calc_effectsize( rate+lift, rate )
+        effect_size = calc_effectsize( rate+last/100, rate )
         return analysis.solve_power(effect_size=effect_size, power=power, alpha=alpha, nobs1=None, ratio=1, alternative='two-sided' )
     
     # calculate lift (nobs input)
